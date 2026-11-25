@@ -22,6 +22,14 @@ export function validateEntry(text: string): string | null {
   }
   if (text.trim().length === 0) return "entry is only whitespace";
   if (/[\r\n]/.test(text)) return "entry must be a single line";
+  // Guard: no control characters and no U+FFFD replacement character,
+  // which would mean the text was not clean UTF-8 to begin with.
+  if (/[\u0000-\u001F\u007F]/.test(text)) {
+    return "entry contains a control character";
+  }
+  if (text.includes("\uFFFD")) {
+    return "entry contains a replacement character";
+  }
   return null;
 }
 

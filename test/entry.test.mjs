@@ -39,6 +39,28 @@ test("program writes entry.txt with the exact entry and no trailing newline", ()
   }
 });
 
+test("negative: 201 characters is rejected", () => {
+  assert.match(validateEntry("x".repeat(201)) ?? "", /over the 200 limit/);
+});
+
+test("negative: whitespace-only is rejected", () => {
+  assert.match(validateEntry("   \t  ") ?? "", /only whitespace/);
+});
+
+test("negative: empty is rejected", () => {
+  assert.match(validateEntry("") ?? "", /empty/);
+});
+
+test("negative: multi-line is rejected", () => {
+  assert.match(validateEntry("line one\nline two") ?? "", /single line/);
+  assert.match(validateEntry("line one\rline two") ?? "", /single line/);
+});
+
+test("negative: control characters and replacement character are rejected", () => {
+  assert.match(validateEntry("roast\x07bell") ?? "", /control character/);
+  assert.match(validateEntry("roast\uFFFDtext") ?? "", /replacement character/);
+});
+
 test("program is deterministic: two runs produce identical bytes", () => {
   const outA = mkdtempSync(join(tmpdir(), "fridge-roast-a-"));
   const outB = mkdtempSync(join(tmpdir(), "fridge-roast-b-"));
