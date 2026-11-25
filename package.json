@@ -1,0 +1,1 @@
+{"description":"Fridge Roast: One Line, Biggest Laugh — a program that writes one roast line for a smart fridge (make.fun bounty entry)","license":"MIT","name":"makefun-fridge-roast-20261125","private":true,"scripts":{"start":"node main.ts","test":"node --test test/entry.test.mjs"},"type":"module","version":"1.0.0"}
